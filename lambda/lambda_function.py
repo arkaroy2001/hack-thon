@@ -1,6 +1,7 @@
 import json
 import jsonpickle
 import clarifai_keyword_call as cla
+import clarifai_sentiment_call as csc
 
 def lambda_handler(event, context):
     #assuming 'event' is a json file
@@ -20,7 +21,8 @@ def lambda_handler(event, context):
         # keywords will be in a list
         keywords_list = curr_keyword_giver.get_keywords()
 
-        sentiment_value = 0
+        curr_sentiment_giver = csc.Sentiment_giver(summary)
+        sentiment_value = curr_sentiment_giver.get_sentiments() # [positive, neutral, negative]
         #TODO: everything else
 
 
