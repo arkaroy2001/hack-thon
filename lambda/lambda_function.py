@@ -24,34 +24,40 @@ def lambda_handler(event, context):
         link = article['link']
         title = article['title']
         pub_date = article['published_date'] # should already be in DATETIME format
-        summary = article['summary']
+        summary = ''.join(filter(whitelist.__contains__, article['summary']))[:2430]
+        category = article['topic']
         
-        # uncomment the part below if we want to use the clarifai model for keywords
-        """
-        #now we process excerpt for keywords using clarafai model
-        curr_keyword_giver = cla.Keyword_giver(title)
-        # keywords will be in a list
-        keywords_list = curr_keyword_giver.get_keywords()
-        if keywords_list:
-            continue # don't want to add this article to our DB if list is empty (i.e. an error occured)
-        """
+        if (category == None) or (category == "news"):
+            tried_keyword_api = True
+            #now we process excerpt for categories using clarafai model
+            curr_keyword_giver = ckc.Keyword_giver(title)
+            # keywords will be in a list
+            category = curr_keyword_giver.get_keywords()
+            if len(category) == 0:
+                continue # don't want to add this article to our DB if category field is empty (i.e. an error occured)
 
         # processing sentiment analysis
         curr_sentiment_giver = csc.Sentiment_giver(summary)
         sentiment_value = curr_sentiment_giver.get_sentiments() # [positive, neutral, negative]
+        if len(sentiment_value) == 0:
+            continue
 
         # putting necessary fields into dictionary
+        # putting necessary fields into dictionary
         dictionary = {
-            "link" = link,
-            "title" = title,
-            "pub_date" = pub_date,
-            "sentiments" = sentiment_value
-            "summary" = summary
+            "link": link,
+            "title": title,
+            "pub_date": pub_date,
+            "sentiments": sentiment_value,
+            "category": category,
+            "summary": summary
         }
 
         # converting dictionary to json to eventually be pushed onto s3
-        with open("current-article.json", "w") as outfile: 
-            json.dump(dictionary, outfile)
+        outfile = open("sample-db/article"+str(counter)+".json","w+")
+        json.dump(dictionary, outfile)
+        outfile.close()
+        # delete file locally once finished uploading to S3
         #TODO: send current-article.json to s3
 
 

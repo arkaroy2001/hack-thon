@@ -19,7 +19,7 @@ from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
 from clarifai_grpc.grpc.api import resources_pb2, service_pb2, service_pb2_grpc
 from clarifai_grpc.grpc.api.status import status_code_pb2
 
-PAT = 'f40cd9f14e1f44218ff433e6518a9e13'
+PAT = '31a06969c8ef455fb2690ed7e0c76788'
 # Specify the correct user_id/app_id pairings
 # Since you're making inferences outside your app's scope
 USER_ID = 'clarifai'
@@ -65,8 +65,9 @@ class Sentiment_giver:
             metadata=metadata
         )
         if post_model_outputs_response.status.code != status_code_pb2.SUCCESS:
-            print(post_model_outputs_response.status)
-            raise Exception("Post model outputs failed, status: " + post_model_outputs_response.status.description)
+            #print(post_model_outputs_response.status)
+            #raise Exception("Post model outputs failed, status: " + post_model_outputs_response.status.description)
+            return []
 
         # Since we have one input, one output will exist here
         output = post_model_outputs_response.outputs[0]
