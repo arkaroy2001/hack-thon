@@ -1,14 +1,23 @@
 import json
 import jsonpickle
+import requests
 import clarifai_keyword_call as cla
 import clarifai_sentiment_call as csc
 
-def lambda_handler(event, context):
-    #TODO:  call newscatcher API
+# set api key (currently: Soham's)
+newscatcher_dict = {
+    headers = {"x-api-key": "ShxLGMc-1lxB9uRimqA5NSHaihERfB0414nR_b71rq8"},
+    querystring = {"when":"24h","lang":"en","ranked_only":"True", "page_size":100},
+    url = "https://api.newscatcherapi.com/v2/latest_headlines"
+}
 
-    #assuming 'event' is a json file
-    response = open(event, 'r').read()
-    curr_dict = jsonpickle.decode(response)
+def lambda_handler(event, context):
+    #TODO:  fix newscatcher GET call
+    newscatcher_response = requests.request("GET", newscatcher_dict[url], 
+        headers=newscatcher_dict[headers], 
+        params=newscatcher_dict[querystring])
+
+    curr_dict = jsonpickle.decode(newscatcher_response)
     articles_list = curr_dict['articles']
     for article in articles_list:
         #each article is of type dict
@@ -17,6 +26,7 @@ def lambda_handler(event, context):
         pub_date = article['published_date'] # should already be in DATETIME format
         summary = article['summary']
         
+        # uncomment the part below if we want to use the clarifai model for keywords
         """
         #now we process excerpt for keywords using clarafai model
         curr_keyword_giver = cla.Keyword_giver(title)
