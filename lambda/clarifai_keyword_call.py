@@ -11,7 +11,7 @@ APP_ID = 'chat-completion'
 # Change these to whatever model and text URL you want to use
 MODEL_ID = 'GPT-3_5-turbo'
 MODEL_VERSION_ID = 'a82b2ece788e4dafac85ca6f8c8cd0f2'
-RAW_TEXT = "Give me a maximum of 3 keywords from the following text: "
+RAW_TEXT = "Give me a maximum of 3 keywords from the following text separated by commas: "
 channel = ClarifaiChannel.get_grpc_channel()
 stub = service_pb2_grpc.V2Stub(channel)
 
@@ -45,10 +45,12 @@ class Keyword_giver:
         )
 
         if post_model_outputs_response.status.code != status_code_pb2.SUCCESS:
-            print(post_model_outputs_response.status)
-            raise Exception(f"Post model outputs failed, status: {post_model_outputs_response.status.description}")
+            return [] # just return an empty list
 
         # Since we have one input, one output will exist here
         output = post_model_outputs_response.outputs[0].data.text.raw
         li = list(output.split(", "))
+        for item in li:
+            if not item.isalpha()
+                return [] #we only want one word and english alphabet letters only
         return li

@@ -11,18 +11,24 @@ def lambda_handler(event, context):
     for article in articles_list:
         #each article is of type dict
         link = article['link']
-        excerpt = article['excerpt']
         title = article['title']
-        pub_date = article['published_date']
+        pub_date = article['published_date'] # should already be in DATETIME format
         summary = article['summary']
-
+        
+        """
         #now we process excerpt for keywords using clarafai model
         curr_keyword_giver = cla.Keyword_giver(title)
         # keywords will be in a list
         keywords_list = curr_keyword_giver.get_keywords()
+        if keywords_list:
+            continue # don't want to add this article to our DB if list is empty (i.e. an error occured)
+        """
 
+        # processing sentiment analysis
         curr_sentiment_giver = csc.Sentiment_giver(summary)
         sentiment_value = curr_sentiment_giver.get_sentiments() # [positive, neutral, negative]
+
+        
         #TODO: everything else
 
 
