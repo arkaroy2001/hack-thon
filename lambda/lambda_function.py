@@ -1,5 +1,4 @@
 import json
-import jsonpickle
 import requests
 import clarifai_keyword_call as cla
 import clarifai_sentiment_call as csc
@@ -12,7 +11,7 @@ newscatcher_dict = {
     "url" : "https://api.newscatcherapi.com/v2/latest_headlines"
 }
 
-whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,;:()')
 
 def lambda_handler(event, context):
     query_results = ""
@@ -22,7 +21,7 @@ def lambda_handler(event, context):
             headers=newscatcher_dict["headers"], 
             params=newscatcher_dict["querystring"])
 
-        curr_dict = jsonpickle.decode(newscatcher_response)
+        curr_dict = newscatcher_response.json()
         articles_list = curr_dict['articles']
         for article in articles_list:
             #each article is of type dict
@@ -50,7 +49,7 @@ def lambda_handler(event, context):
             #making sure title doesn't have any double quotes to mess up our sql statement
             title.replace('"','')
 
-            sql_stmt += "(" + title + pub_date + sentiment + category + summary + "), "
+            sql_stmt += "\t('" + link + "', '" + title + "', '" + pub_date + "', " + str(sentiment) + ", '" + category + "', '" + summary + "'),\n"
 
         # now we've added all article tuples into sql_stmt
         sql_stmt = sql_stmt[:-1]
