@@ -52,7 +52,7 @@ def lambda_handler(event, context):
             sql_stmt += "\t('" + link + "', '" + title + "', '" + pub_date + "', " + str(sentiment) + ", '" + category + "', '" + summary + "'),\n"
 
         # now we've added all article tuples into sql_stmt
-        sql_stmt = sql_stmt[:-1]
+        sql_stmt = sql_stmt[:-2]
         sql_stmt += ";"
 
         # now we must run sql_stmt on RDS
