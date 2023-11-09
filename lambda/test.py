@@ -2,6 +2,7 @@ import json
 import requests
 import clarifai_keyword_call as ckc
 import clarifai_sentiment_call as csc
+import rds_connector as rdsc
 
 # set api key (currently: Soham's)
 newscatcher_dict = {
@@ -61,6 +62,6 @@ for i in range(1):
     sql_stmt += ";"
 
     # now we must run sql_stmt on RDS
-    f = open("sql-statement.txt", "a")
-    f.write(sql_stmt)
-    f.close()
+    rds_cnctr = rdsc.RDS_connector(sql_stmt) #this will print something to console if an error occurs
+    query_results += "RESULTS OF API CALL #" + str(i+1) + " ...\n" + rds_cnctr.add_tuples() + "\n\n"
+    print(query_results)
