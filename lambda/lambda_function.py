@@ -49,7 +49,6 @@ def lambda_handler(event, context):
             #making sure title doesn't have any double quotes to mess up our sql statement
             title.replace('"','')
 
-            sql_stmt += "\t('" + link + "', '" + title + "', '" + pub_date + "', " + str(sentiment) + ", '" + category + "', '" + summary + "'),\n"
 
         # now we've added all article tuples into sql_stmt
         sql_stmt = sql_stmt[:-2]

@@ -1,4 +1,4 @@
-import pymysql
+import psycopg2
 import sys
 import boto3
 import os
@@ -10,7 +10,6 @@ PORT="5432"
 USER="postgres"
 REGION="us-east-1"
 DBNAME="news_db"
-os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
 
 #gets the credentials from .aws/credentials
 session = boto3.Session(profile_name='default')
@@ -23,7 +22,7 @@ class RDS_connector:
 		self.sql_stmt = input_str
 		self.error_mssg = ""
 		try:
-		    conn =  pymysql.connect(host=ENDPOINT, user=USER, passwd=token, port=PORT, database=DBNAME, ssl_ca='SSLCERTIFICATE')
+		    conn = psycopg2.connect(host=ENDPOINT, port=PORT, database=DBNAME, user=USER, password=token, sslrootcert="SSLCERTIFICATE")
 		    self.cur = conn.cursor()
 		except:
 			self.error_mssg = "Connection error to RDS"
