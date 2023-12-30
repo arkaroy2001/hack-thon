@@ -1,5 +1,6 @@
 import React, { useState,useEffect} from 'react'
 import httpClient from './httpClient';
+import BubbleChart from "./BubbleChart";
 
 const MainView = () => {
 
@@ -25,10 +26,9 @@ const MainView = () => {
         return <p>...Loading</p>
     }
 
-
     return (
         <div>
-            <p>{message}</p>
+            <BubbleChart/>
         </div>
     );
 };
