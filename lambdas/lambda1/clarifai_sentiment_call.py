@@ -42,16 +42,8 @@ userDataObject = resources_pb2.UserAppIDSet(user_id=USER_ID, app_id=APP_ID)
 class Sentiment_giver:
     def __init__(self, input_arr):
         self.input_arr = []
-        for i in input_arr:
-            self.input_arr.append(
-                resources_pb2.Input(
-                        data=resources_pb2.Data(
-                            text=resources_pb2.Text(
-                                raw=i
-                            )
-                        )
-                    )
-            )
+        for curr_str in input_arr:
+            self.input_arr.append(resources_pb2.Input(data=resources_pb2.Data(text=resources_pb2.Text(raw=curr_str))))
 
 
     #will return a list of vlaues from 0 to 1 [positive, neutral, negative]
@@ -65,6 +57,7 @@ class Sentiment_giver:
             ),
             metadata=metadata
         )
+        
         if post_model_outputs_response.status.code != status_code_pb2.SUCCESS:
             #print(post_model_outputs_response.status)
             #raise Exception("Post model outputs failed, status: " + post_model_outputs_response.status.description)
@@ -75,6 +68,10 @@ class Sentiment_giver:
 
         retval = []
         for output in output_arr:    
-            concepts = output.data.concepts
-            retval.append(concepts[0].value - concepts[2].value) #positive value minus negative value
+            for c in output.data.concepts:
+                if c.name == "positive":
+                    pos = c.value
+                elif c.name == "negative":
+                    neg = c.value
+            retval.append(pos - neg) #positive value minus negative value
         return retval
