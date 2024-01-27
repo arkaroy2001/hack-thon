@@ -11,7 +11,7 @@ APP_ID = 'chat-completion'
 # Change these to whatever model and text URL you want to use
 MODEL_ID = 'GPT-3_5-turbo'
 MODEL_VERSION_ID = 'a82b2ece788e4dafac85ca6f8c8cd0f2'
-RAW_TEXT = "Give me one a one-word category for the following news title: "
+RAW_TEXT = "Given the topics sports, politics, environment, and business, which one best fits the following news title: "
 channel = ClarifaiChannel.get_grpc_channel()
 stub = service_pb2_grpc.V2Stub(channel)
 
