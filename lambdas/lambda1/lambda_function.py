@@ -94,7 +94,8 @@ def lambda_handler(event, context):
 
         # now we've added all article tuples into sql_stmt
         sql_stmt = sql_stmt[:-2] # getting rid of last comma and new-line character
-        sql_stmt += ";" # adding the semicolon for the SQL statement
+        sql_stmt += " ON CONFLICT DO NOTHING;" # adding the semicolon for the SQL statement
+        # the above statement includes the statement that will not add duplicate-titled articles into RDS
 
         # now we must run sql_stmt on RDS
         rds_cnctr = rdsc.RDS_connector(sql_stmt) #this will print something to console if an error occurs
