@@ -9,7 +9,7 @@ import os
  # RDS database configuration values
 endpoint = "news-db-instance.ctyrvpc3gemg.us-east-1.rds.amazonaws.com"
 db_user = "postgres"
-db_password = "arkasoham"
+db_password = "FAKE PASSWORD" # real password is in Lambda
 db_name = "news_db"
 
 # S3 bucket configuration
